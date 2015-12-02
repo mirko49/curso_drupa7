@@ -1,0 +1,55 @@
+<?php
+/**
+ * @file
+ * Code for the d7_article feature.
+ */
+
+include_once 'd7_article.features.inc';
+
+/**
+ * Implements hook_block_info().
+ */
+function d7_article_block_info() {
+  $blocks['d7_article_list'] = array(
+    'info' => t('D7 Article list'),
+  );
+
+  return $blocks;
+}
+
+/**
+ * Implements hook_block_view().
+ */
+function d7_article_block_view($delta = '') {
+  $block = array();
+
+  switch ($delta) {
+    case 'd7_article_list':
+      module_load_include('inc', 'd7_article');
+      $block['subject'] = t('Syndicate');
+
+      $block['content'] = d7_article_get_articles_list(3);
+      break;
+  }
+
+  return $block;
+}
+
+/**
+ * Implements hook_entity_info_alter().
+ */
+function d7_article_entity_info_alter(&$entity_info) {
+  $entity_info['node']['view modes']['article_large'] = array(
+    'label' => t('Article Large'),
+    'custom settings' => TRUE,
+  );
+}
+
+/**
+ * Implements hook_preprocess_node().
+ */
+function d7_article_preprocess_node(&$variables) {
+  if($variables['view_mode'] == 'article_large') {
+    $variables['theme_hook_suggestions'][] = 'node__' . $variables['type'] . '__article_large';
+  }
+}

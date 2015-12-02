@@ -1,0 +1,77 @@
+<?php
+/**
+ * D7 Homepage Module
+**/
+
+/**
+ * Implements hook_menu().
+ */
+function d7_homepage_menu() {
+  $items['home'] = array(
+    'title' => 'Home Page',
+    'page callback' => 'd7_homepage_callback',
+    'access arguments' => array('access homepage'),
+    'type' => MENU_CALLBACK,
+    'file' => 'd7_homepage.pages.inc',
+  );
+
+  return $items;
+}
+
+/**
+ * Implements hook_permission().
+ */
+function d7_permission() {
+  $perms = array(
+    'access homepage' => array(
+      'title' => t('Access Homepage'),
+    ),
+  );
+
+  return $perms;
+}
+
+/**
+ * Implements hook_block_info().
+ */
+function d7_homepage_block_info() {
+  $blocks['d7_homepage_first'] = array(
+    'info' => t('D7 Homepage first'),
+  );
+
+  return $blocks;
+}
+
+/**
+ * Implements hook_block_view().
+ */
+function d7_homepage_block_view($delta = '') {
+  $block = array();
+
+  switch ($delta) {
+    case 'd7_homepage_first':
+      $block['subject'] = t('Syndicate');
+//      $block['content'] = array(
+//        '#theme' => 'd7_homepage_blocks',
+//        '#variables' => array('block_name' => t("Curso de drupal block 1")),
+//      );
+      $block['content'] = theme('d7_homepage_blocks',
+        array('block_name' => t("Curso de drupal block 1"))
+      );
+      break;
+  }
+
+  return $block;
+}
+
+/**
+ * Implements hook_theme().
+ */
+function d7_homepage_theme($existing, $type, $theme, $path) {
+  return array(
+    'd7_homepage_blocks' => array(
+      'variables' => array(),
+      'template' => 'templates/d7-homepage-blocks'
+    ),
+  );
+}
